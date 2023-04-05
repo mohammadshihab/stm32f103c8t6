@@ -1,0 +1,30 @@
+the stm32f103 used in the development board named blue pill
+  -it is a development board designed by st electronics
+  -it can be programmed it two ways mainly 
+      1. using STlink as debugger or programmer
+      1. using ftdi (an usb to serial converter)
+         other usb to serial converter can be used too but need
+         to check first
+  - stm32 cubeIDE and arduiono are two ide to program the board. Here
+    the cubeIDE should be choosen 
+
+
+there some informative datasheet from their website , some of them are
+well presented and easily understandable (one is the general overview 
+on internal and external about mcu, another one is datasheet) . those 
+sould be read to gain the knowledge and overview about the mcu and 
+programming.    Also there are some pdf tutorial from third party. those
+should be checked out too.
+
+
+the ST weblink--https://blog.st.com/stm32-step-by-step-tutorial/ and 
+https://wiki.st.com/stm32mcu/wiki/STM32StepByStep:STM32_step_by_step_overview
+can be used for tutorials. the simple roadmap according to their site can be
+--it will teach readers how to set up their MCU, launch a blinking light
+ application, then present critical concepts such as UART, sensors, and
+ mobile apps using Bluetooth.--
+----------------------------------------------------------------------
+
+
+a tutorial site:
+http://www.pomad.fr/node/14

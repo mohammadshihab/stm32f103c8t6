@@ -1,0 +1,2 @@
+A cross-platform compiler is a compiler able to generate machine code for a hardware
+machine different from the one we are using to develop our applications

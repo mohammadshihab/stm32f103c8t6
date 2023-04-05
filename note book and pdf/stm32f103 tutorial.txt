@@ -1,0 +1,290 @@
+8 march 2022:
+embedded system>stm32>RTOS>freeRTOS
+
+in RTOS , the tasks are divided into different time stot and they 
+are executed based on prirority.Now those tasks may be calling any
+inturrupt of any function made up with specific purpose.
+
+#sceduler: the sceduler is an algorithm that determine which task
+should should be executed
+in freeRTOS, roud-ribon sceduling algorithm is implemented
+for task handeling. this round ribon algorithm can be used 
+with either 1.preemtive or 2.cooparative.
+1.preemptive: here task switching happens anytime
+2.cooparative:here task switching happens only when the running task 
+  is completed (even there is another task with higher prirority)
+
+#heap of freeRTOS:
+when there is any task, the variable( or any contex) are need to be placed into 
+memory stack. the combination of stacks makes a specific task and those tasks stay 
+in the HEAP (or data memory)
+
+so, HEAP>TASK (queue of task) > STACK (memory for task)
+
+Now , when a task is executing, the memory for task (let TASK-A) should be
+ALLOCATED on the heap and when it is killed it should be DEALLOCATED from 
+the HEAP. this ALLOCATION is managed be freeRTOS globally in the HEAP.
+freeRTOS has its own heap management
+the data storing in heap might not be by freeRTOS . but the thing that 
+freeRTOS does is the allocation management in heap.
+so, the HEAP contains the data of task that we defines. more easily,
+when i create a task , i create a block of memory which belongs to that
+specific task. now this memory  of TASK consists of two block . 
+1.one is the  task controll block ( or TCB,it is a chank of memory that describe the task) . 
+ it is associated with cpu register, like where the memory allocation of (stack for the) task.
+ also it defines weather the tasks is ready or its wating for something.
+ all those informations are stored in task controll block
+2.another one is the STACK of the task
+
+
+....
+in freeRTOS splitting is required. and you can split ino 8 part. where 4 of
+them is user selectable and 4 of them is selected by freeRTOS
+
+finally , when a task is running in the core, for TASK switching, it will take 
+17 regester and put them into task control block ( TCB) .  then load them into 
+these 17 register from TCB. then it will do the interrupt return. then it will 
+do the second task ( that should be executed). note that, no floating point should
+be used here. cause it will take another extra register in addition of 17 register.
+
+here is an point, when you are lack of RAM because of any task with big memory, (that 
+memomry has two part (ex : graphical and communication) but those two memory 
+does not ruquire at the same time , in this case, those two memories are 
+allocated in two task and then in a SUPER TASK, those two task can be called
+according to when they are required release when they dont need.
+
+
+
+
+9 march 2022:
+interfacing tft display with stm32 blue pill.
+there is no specific and clear resourse about interfacing tft display with stm32.
+here, the st7735 tft display is choosen. tft interfacing with this can be tried.
+Also , as there is a complete resouse on how to INTERFACE TFT DISPLAY (ST7735) WITH
+AVR ATMEGA 328P WITHOUT ANY EXTERNAL LIBRARY, this may help me out.But before this,
+this tutorial should be checked out
+https://controllerstech.com/st7735-1-8-tft-display-with-stm32/
+
+10 march 2022:
+previous one(st7735 tft display) was quite unfimilar and unavailable for most of the cases.
+so, the 0.96 SSD1306 model oled display has been choosen. all the library 
+may be found by searching in website. here is one :
+https://controllerstech.com/oled-display-using-i2c-stm32/
+this display works in I2C mode. so the I2C CONFIGURATION of the STM32 BLUE PILL
+should be known first . it is a serial communication interface.
+
+seems like quite easy, this tutorial can be followed step by step:
+https://www.youtube.com/watch?v=Mt6U30Yxrr8&ab_channel=NizarMohideen
+
+
+
+
+programming stm32 blue pill with usb-ttl cp2021 :
+there are so many way to flash the stm 32 blue pill. here the way is been choosen is,
+create target program> compile with hex creator> upload the hex file
+using serial converter(like cp2021)> use flash loader software to burn the hex file
+
+https://alselectro.wordpress.com/tag/stm32-bluepill/
+
+hex file can be flashed on the stm 32 board using third party
+bootloader ( like in AVR it was usbasp or avrdude)
+this is called FLASH LOADER
+https://www.youtube.com/watch?v=RVDSHQmTjfQ&ab_channel=magansoma
+NB: FLASHLOADER official program to flash hex file using ttl.
+
+this may help to flash the hex file with flash-loader using cp2021 serial converter
+https://www.youtube.com/watch?v=Z1-toCFXcbo&ab_channel=Nanoslavic
+above one contains another custom hex file flash loader. see the bellows one also
+https://www.youtube.com/watch?v=VDNJUsWvI0o&ab_channel=electronicGURU
+
+
+
+
+
+12 march 2022
+what is BOOTLOADER:
+a bootloader is a program in micro-controller that allows micro-controller to
+load other programs in more convenient way like , via usb cable ( usbasp, ttl etc)
+burning a micro-controller by flashing any program(ex HEX file) into flash memory
+is controlled by this bootloader
+
+
+
+
+16 march 2022:
+MBED platform can be used to develop any project that is based stm board
+what is MBED: it is a cross platform (like cross compiler) to debug ARM cortex
+M seried microcontroller. there are several method tho use this compiler or IDE
+. Those are like online cloud compiler and ofline downloaded compiler software.
+From two of them, the online can be choosen as there is no need to install the 
+IDE . More importantly, the online cloud compiler is WELL ORGANISED . there 
+are some several basic to adavance level example these can be used to debug the
+board directly. Also there are some direct example of RTOS . those can be checked
+out. note: this compiler may be use custom specific library for most of the cases.
+
+
+
+22 march 2022:
+LED blinking done with usb to ttl cp2021 and flashloader ( select the second option)
+in 21 march. Hence flashing stm32 blue pill with usb to ttl is possible.
+####Now as the st-link programmer is collected too. and how to flash the
+blue pill with st-link is known too.
+today, driving oled display using stm32 blue pill:
+----------------------------------------------------
+this tutorial can be followed:
+https://www.youtube.com/watch?v=Mt6U30Yxrr8&ab_channel=NizarMohideen-MicroPeta
+**failed in first attemp
+see the tutorial series of this channel
+try it if works:
+https://www.youtube.com/watch?v=ruDyTsmVls4&ab_channel=GregorSlemen%C5%A1ek
+see, what are the major differences between stm32f103c6 and stm32f103c8
+that may be responsible for changing in the code taken from first tutorial
+-----------------
+this channel has been covered several specific type of applicable videos.
+should be checked out:
+https://www.youtube.com/channel/UCwFdriSdz5wqI39ot2WS7pw
+--------
+oled project should work with stm32f103c6 too as mentioned in the video.
+differences between stm32f103c8 and stm32f103c6 is here:
+https://www.youtube.com/watch?v=p9YbSDlH5qo
+-------------
+the problem might be created because of wrong method of dibugging as method 
+didnt macthed with the tutorial ( or the problem might be anything else).
+should be checked out.
+
+-------------------------------------------------------------------
+
+
+
+
+23 march 2022:
+the oled ssd1306 didnt work yet. Now i have doubt about the oled display.
+For this , the oled display should be checked out by driving it using arduino.
+there are lot of tutorial how to use 0.96 oled display using arduino.
+AFTER CONFIRMATION , NEXT STEP WILL BE TAKEN
+---------------------------------------------------------------
+
+24 march 2022:
+the oled display has been checked with arduino. IT WORKS AND IT'S OKAY.
+. So the problem might be with the stm32f103c6 board or the library. 
+because all the tutorials are made up for stm32f103c8t6. which is bit 
+different than that version.
+
+GOT IT. THE PROBLEM WAS WITH THE BOARD STM32F103C6T6. THE OLED DISPLAY
+WORKS PRETTY WELL WITH THE BOARD STM32F103C8T6 AND IT'S DONE.
+The stm32f103c6t6 should be checked out too if it works with the oled display.
+ANOTHER FACT IS, the oled display that was collected is a MONOCROME TYPE
+OLED DISPLAY(may be there are three types of 0.96 this types of display)
+. Thats why the color variation displaying might not be possible with
+this display. Anyway it doesnt matter. Its looks well even with the monocrome
+type of color.
+
+
+-----------------------------------------------------------------------------
+
+
+25 march 2022:
+
+some things need to do to clear the concepts about the stm32 blue pill:
+those are:
+||1.how to control every I/O pins independently (simulation was done)
+||2.how the header file and c file  including works
+||3.how to control the oled display easily in application purpose
+
+THEN THOSE THINGS SHOULD BE DONE:
+||1.communication between to two controller ( display will be included)
+||2.how to use differents types of wireless communication module with stm32 blue pill
+-----------------------------------------------------------------------------------
+CONTROLLING INDIVIDUAL PIN DONE>workspace >new folder>4.stm32_basic_pin_and_register_control
+
+next day,including header file and c file(blinking some individual LED can be used as example)
+------------------------------------------------------------------------------------
+
+
+26 march 2022:
+inserting header file and c file has been seen. quite understandable. Need to see and explore 
+more.
+---------------------------------------------------------------------------------------
+SIMPLE TEXT PRINTING IN OLED DISPLAY IS DONE . 
+At-workspace >new folder>5.stm32_oled_display_basic_text_and_functionalities
+this is quite easy too. different size of font ( three types ) can be selected . 
+position can be selected too as required.
+other functionalities should be explored too like drawing line differents types of 
+shape such as triangle, circle, ractangle and bitmap. Those fuctions can be found at the 
+ssd1306.c file
+------------------------------------------------------------------------------------------
+
+
+29 march 2022:
+Communication of stm32f103c8t6 and stm32f103c6t6:
+following steps can be followed sequentially for having a good knowlendge about communication:
+1.(MCU to PC):send data from MCU to computer using UART COMMUNICATION: usb-ttl and tera term will be
+  required here.
+      sending data can be two types here:
+      a. by setting the value of a register
+      b. by using a push button that will transmit data(ex an word) whenever the button is 
+         pressed
+
+2.(PC to MCU):send data from computer to MCU using same UART COMMUNICATION, same tera term can be used 
+  to transmit data from PC . Ther response of reciever at the MCU side can be observed by 
+  using an LED indicator
+
+3.(MCU TO MCU): send data from one mcu to another mcu, for this , 
+      a. see how the LED of one MCU light up whenever the button of another MCU is pressed
+      b. set up the TX AND RX of both MCU clearly and see how they works
+      c. connect the OLED DISPLAY  and dispay the how the communication is working between
+         the two MCU.
+-----------------------------------------------------------------------------------------------
+
+30 march 2022:
+1.(MCU to PC) SERIAL COMMUNICATION IS DONE, see all the setup in src>main.c file
+  and the project file is here,
+  workspace >new folder>6.stm32_uart_communication_MCU_to_PC_2
+2.(PC to MCU):
+  (undone) take parameters in cube ide only for observing response in MCU with respect to transmitting data from
+  tera term in PC.here the MCU will recieve UART serial data
+--------------------------------------------------------------------------------------------
+
+31 march 2022:
+2.(PC to MCU):
+  PC TO MCU USART1 SERIAL COMMUNICATION IS DONE. SEE THE PROJECT AT 
+  workspace >new folder>6.2.stm32_uart_communication_PC_to_MCU
+----------------------------------
+THE TEXT PRINTING IN OLED DISPLAY HAS BEEN UPDATED BY UPDATING THE PREVIOUS PROJECT FILE:
+At-workspace >new folder>5.stm32_oled_display_basic_text_and_functionalities.
+HERE NEW TEXT CAN BE PRINTED IN THE SCREEN WITHOUT BLINKING THE SCREEN.
+ssd1306_UpdateScreen() simply update the screen, ssd1306_clear() is responsible for blinking
+--------------------------------------------------------
+
+aplil 1 2022:
+3.(MCU TO MCU):
+          for the serial communication between stm32 and stm32 with oled display:
+1.sender stm32 : that will send data through Tx or transmitter.
+               This project is done where stm32 send data which is seen in tera term
+
+2.reciever stm32:  this will recieve data show it in oled display. this project should
+               be developed first. where sent data through tera term will be shown in 
+               oled display
+
+Finally, if two MCU is connected with each other , there will be a serial communication
+between to mcu, and will be shown in oled display
+
+2.RECEIVER stm32: ITS DONE, send data from teraterm and see it is oled display
+ workspace>New folder>6.3.1.stm32_uart_communication_PC_to_MCU_with_OLED_display
+
+
+-------------------------------------------------------
+06 april 2022:
+3.(MCU to MCU): 
+        1.sender MCU done, 1)1)6.1.2.communication_between_MCU_to_PC_stm32f103c6t6_version
+
+this serial communication is done partially. May be due to some limitation of 
+             USART serial communication , full length of string cant be sent sequentially.
+             Anyway, the code is ,
+                   sender, 1)6.1.2.communication_between_MCU_to_PC_stm32f103c6t6_version
+                   receiver, 2)6.3.1.stm32_uart_communication_PC_to_MCU_with_OLED_display
+      
+
+
+
+
